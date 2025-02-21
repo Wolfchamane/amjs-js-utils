@@ -1,19 +1,17 @@
-const capitalize = require('./capitalize');
-const stringify = require('./stringify');
+import { capitalize } from './capitalize';
+import { stringify } from './stringify';
 
 /**
  * Transforms a text into its camel-case form, i.e.: 'hello-world' -> 'helloWorld'
  * @param   {String}    text    To be transformed
- * @param   {String}    sep     To add as word-clause separator
  * @return  {String}    camel-case form
  */
-module.exports = (text = '', sep = '') =>
-{
+export function camelize(text: string): string {
     text = stringify(text);
 
     return text
-        .split(/\W/)
-        .filter(p => !!p)
+        .split(/[\W\s]+/g)
+        .filter(Boolean)
         .map((p, i) => (i ? capitalize(p) : p))
-        .join(sep);
-};
+        .join('');
+}

@@ -1,4 +1,4 @@
-import { decamelize } from "./decamelize";
+import { decamelize } from './decamelize';
 import { describe, test, expect } from '@jest/globals';
 
 describe('decamelize', () => {

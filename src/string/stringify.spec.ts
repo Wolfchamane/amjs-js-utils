@@ -8,7 +8,7 @@ describe('stringify', () => {
     });
 
     test('Transforms any value into its string version', () => {
-        [1,0.05,-1,true,false,{},[], '', 'text'].forEach(value => {
+        [1, 0.05, -1, true, false, {}, [], '', 'text'].forEach(value => {
             expect(stringify(value)).toEqual(typeof value === 'object' ? JSON.stringify(value) : value.toString());
         });
     });

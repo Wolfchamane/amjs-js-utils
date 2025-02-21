@@ -3,4 +3,4 @@
 node_modules
 npm*
 coverage
-.nyc_output
+dist

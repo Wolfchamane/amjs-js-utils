@@ -14,22 +14,25 @@
     "author": "Arturo Martínez Díaz <arturo.martinez@amartinez.dev>",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "type": "module",
     "devDependencies": {
         "@eslint/js": "^9.20.0",
         "@types/jest": "^29.5.14",
-        "eslint": "^9.20.1",
+        "eslint": "^9.21.0",
+        "globals": "^16.0.0",
         "jest": "^29.7.0",
         "prettier": "^3.5.0",
         "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",
-        "typescript": "^5.7.3"
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.26.0"
     },
     "scripts": {
         "build": "tsc",
         "format": "prettier --config .prettierrc .",
         "format:fix": "prettier --config .prettierrc --write .",
-        "lint": "eslint --config .eslintrc.js **/.js src __tests__",
-        "lint:fix": "eslint --fix --config .eslintrc.js --ext .js src __tests__",
+        "lint": "eslint --config eslint.config.js src/**/*.ts ",
+        "lint:fix": "eslint --fix --config eslint.config.js src/**/*.ts",
         "test": "npx jest --config jest.config.ts",
         "test:coverage": "npm run test -- --coverage"
     }

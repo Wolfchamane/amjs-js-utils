@@ -1,4 +1,4 @@
-import { stringify } from './stringify';
+import { stringify } from './stringify.ts';
 
 /**
  * Transforms a text into itself but with first character in upper case, i.e: 'hello' -> 'Hello'

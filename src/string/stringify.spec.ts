@@ -1,4 +1,4 @@
-import { stringify } from './stringify';
+import { stringify } from './stringify.ts';
 import { describe, test, expect } from '@jest/globals';
 
 describe('stringify', () => {

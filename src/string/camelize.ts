@@ -1,5 +1,5 @@
-import { capitalize } from './capitalize';
-import { stringify } from './stringify';
+import { capitalize } from './capitalize.ts';
+import { stringify } from './stringify.ts';
 
 /**
  * Transforms a text into its camel-case form, i.e.: 'hello-world' -> 'helloWorld'

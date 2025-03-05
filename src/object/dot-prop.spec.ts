@@ -1,4 +1,4 @@
-import { dotProp } from './dot-prop';
+import { dotProp } from './dot-prop.ts';
 import { describe, test, expect } from '@jest/globals';
 
 describe('dotProp', () => {

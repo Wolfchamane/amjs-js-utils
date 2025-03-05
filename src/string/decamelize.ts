@@ -1,4 +1,4 @@
-import { stringify } from './stringify';
+import { stringify } from './stringify.ts';
 
 /**
  * Transforms a camelCase text into its non-camelCase value, i.e.: 'helloWorld' -> 'hello-world'

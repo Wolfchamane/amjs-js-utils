@@ -1,1 +1,1 @@
-export * from './dot-prop';
+export * from './dot-prop.ts';

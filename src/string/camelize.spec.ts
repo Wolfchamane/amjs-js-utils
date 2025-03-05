@@ -1,4 +1,4 @@
-import { camelize } from './camelize';
+import { camelize } from './camelize.ts';
 import { describe, test, expect } from '@jest/globals';
 
 describe('camelize', () => {

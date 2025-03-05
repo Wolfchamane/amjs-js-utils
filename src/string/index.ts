@@ -1,4 +1,4 @@
-export { camelize } from './camelize';
-export { capitalize } from './capitalize';
-export { decamelize } from './decamelize';
-export { stringify } from './stringify';
+export { camelize } from './camelize.ts';
+export { capitalize } from './capitalize.ts';
+export { decamelize } from './decamelize.ts';
+export { stringify } from './stringify.ts';

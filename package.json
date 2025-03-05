@@ -29,11 +29,15 @@
     },
     "scripts": {
         "build": "tsc",
+        "build:doc": "typedoc --tsconfig tsconfig.json --options typedoc.config.js",
         "format": "prettier --config .prettierrc .",
         "format:fix": "prettier --config .prettierrc --write .",
         "lint": "eslint --config eslint.config.js src/**/*.ts ",
         "lint:fix": "eslint --fix --config eslint.config.js src/**/*.ts",
         "test": "npx jest --config jest.config.ts",
         "test:coverage": "npm run test -- --coverage"
+    },
+    "dependencies": {
+        "typedoc": "^0.27.9"
     }
 }

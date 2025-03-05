@@ -5,11 +5,13 @@
         "declaration": true,
         "outDir": "./dist",
         "moduleResolution": "nodenext",
+        "allowImportingTsExtensions": true,
         "esModuleInterop": true,
         "baseUrl": "./src",
         "paths": {
             "@/*": ["/*"]
         }
     },
-    "include": ["(src|tests)/**/*.ts"]
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist", "src/coverage"]
 }

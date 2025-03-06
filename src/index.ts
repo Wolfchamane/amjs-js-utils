@@ -1,2 +1,2 @@
-export * from './object/index.ts';
-export * from './string/index.ts';
+export * from './object/index';
+export * from './string/index';

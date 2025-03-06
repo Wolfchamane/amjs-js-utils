@@ -1,1 +1,2 @@
-export * from './dot-prop.ts';
+export * from './dot-prop';
+export * from './is-object';

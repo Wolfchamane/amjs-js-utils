@@ -1,10 +1,15 @@
-import { stringify } from './stringify.ts';
+import { stringify } from './stringify';
 
 /**
- * Transforms a text into itself but with first character in upper case, i.e: 'hello' -> 'Hello'
+ * Transforms a text into itself but with first character in upper case, i.e.:
+ * ```typescript
+ * import { capitalize } form '@amjs/js-utils';
+ * console.log(capitalize('hello')); // "Hello"
+ * ```
+ *
  * @param   {String}    text    To be transformed
  * @return  {String}    Capitalized text
- * @throws  An error if {text} is not valid
+ * @throws  {Error}     If {text} is not valid
  */
 export function capitalize(text: string): string {
     text = stringify(text);

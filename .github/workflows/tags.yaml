@@ -18,7 +18,7 @@ concurrency:
     cancel-in-progress: false
 
 jobs:
-    checkout:
+    code_checkout:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -43,7 +43,7 @@ jobs:
             - name: Setup NODE
               uses: actions/setup-node@v2
               with:
-                  node-version: 'latest'
+                  node-version: '22'
                   cache: ${{ steps.detect-package-manager.outputs.manager }}
             - name: Install dependencies
               run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
@@ -53,9 +53,11 @@ jobs:
               run: ${{ steps.detect-package-manager.outputs.runner }} npm run lint
             - name: Test source code
               run: ${{ steps.detect-package-manager.outputs.runner }} npm run test
-    build:
+            - name: Test types integrity
+              run: ${{ steps.detect-package-manager.outputs.runner }} npm run type:check
+    build_docs:
         runs-on: ubuntu-latest
-        needs: checkout
+        needs: code_checkout
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -79,20 +81,18 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version: 'latest'
+                  node-version: '22'
                   cache: ${{ steps.detect-package-manager.outputs.manager }}
             - name: Install dependencies
               run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-            - name: Build project
-              run: ${{ steps.detect-package-manager.outputs.runner }} npm run build
             - name: Build documentation
               run: ${{ steps.detect-package-manager.outputs.runner }} npm run build:doc
             - name: Upload documentation
               uses: actions/upload-pages-artifact@v3
               with:
                   path: ./docs
-    publish:
-        needs: build
+    publish_package:
+        needs: code_checkout
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -117,7 +117,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version: 'latest'
+                  node-version: '22'
                   cache: ${{ steps.detect-package-manager.outputs.manager }}
                   registry-url: https://registry.npmjs.org/
             - name: Install dependencies
@@ -135,7 +135,7 @@ jobs:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
         runs-on: ubuntu-latest
-        needs: build
+        needs: build_docs
         steps:
             - name: Deploy to GitHub Pages
               id: deployment

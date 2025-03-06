@@ -1,4 +1,4 @@
-import { capitalize } from './capitalize.ts';
+import { capitalize } from '@/string';
 import { describe, test, expect } from '@jest/globals';
 
 describe('capitalize', () => {

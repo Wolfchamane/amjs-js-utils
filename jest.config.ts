@@ -13,10 +13,12 @@ export default (): Config => ({
         }
     },
     transform: {
-        '^.+\\.ts$': 'ts-jest'
+        '^.+\\.ts$': ['ts-jest', { useESM: true, isolatedModules: true }]
     },
-    moduleFileExtensions: ['ts', 'js'],
     rootDir: './src',
+    moduleNameMapper: {
+        '^@/(.+)': '<rootDir>/$1'
+    },
     testEnvironment: 'node',
     verbose: true
 });

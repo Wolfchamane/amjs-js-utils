@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
-        "module": "nodenext",
-        "target": "es2024",
+        "target": "esnext",
+        "module": "esnext",
         "declaration": true,
-        "outDir": "./dist",
-        "moduleResolution": "nodenext",
-        "allowImportingTsExtensions": true,
+        "outDir": "dist",
+        "moduleResolution": "bundler",
         "esModuleInterop": true,
+        "strict": true,
+        "sourceMap": true,
+        "declarationMap": true,
         "baseUrl": "./src",
         "paths": {
             "@/*": ["/*"]
         }
     },
     "include": ["src/**/*.ts"],
-    "exclude": ["node_modules", "dist", "src/coverage"]
+    "exclude": ["src/**/*.spec.ts"]
 }

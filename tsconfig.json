@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "declaration": true,
+        "outDir": "dist",
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "strict": true,
+        "sourceMap": true,
+        "declarationMap": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": ["/*"]
+        }
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts"]
+}

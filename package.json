@@ -1,44 +1,42 @@
 {
-    "name": "@amjs/utils",
-    "version": "0.1.7",
-    "description": "Set of tools as capitalize text, camelize text, dotProp, etc.",
+    "name": "@amjs/js-utils",
+    "version": "0.2.0",
+    "description": "Set of JS tools.",
     "keywords": [
-        "nodejs",
-        "tools",
-        "module"
+        "javascript",
+        "tools"
     ],
     "license": "MIT",
     "repository": {
         "type": "git",
-        "ulr": "git@github.com:Wolfchamane/amjs-utils.git"
+        "ulr": "git@github.com:Wolfchamane/amjs-js-utils.git"
     },
-    "author": "Arturo Martínez Díaz <arturo.mart.diaz@gmail.com>",
-    "main": "index.js",
+    "author": "Arturo Martínez Díaz <arturo.martinez@amartinez.dev>",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
     "devDependencies": {
-        "@amjs/create-readme": "^0.1.4",
-        "@babel/core": "^7.11.6",
-        "@babel/preset-env": "^7.11.5",
-        "@babel/register": "^7.11.5",
-        "@istanbuljs/nyc-config-babel": "^2.1.1",
-        "babel-eslint": "^10.1.0",
-        "babel-plugin-istanbul": "^5.1.4",
-        "eslint": "^6.3.0",
-        "lint-staged": "^9.2.5",
-        "nyc": "^14.1.1",
-        "prettier": "^1.18.2"
-    },
-    "lint-staged": {
-        "*.js": [
-            "prettier --config .prettierrc --write",
-            "eslint --fix --config .eslintrc.yml --ext .mjs",
-            "git add"
-        ]
+        "@eslint/js": "^9.20.0",
+        "@types/jest": "^29.5.14",
+        "eslint": "^9.21.0",
+        "globals": "^16.0.0",
+        "jest": "^29.7.0",
+        "prettier": "^3.5.0",
+        "ts-jest": "^29.2.5",
+        "ts-node": "^10.9.2",
+        "typedoc": "^0.27.9",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.26.0"
     },
     "scripts": {
-        "format": "prettier --config .prettierrc --write 'src/**/*.m?js'",
-        "lint": "eslint --fix --config .eslintrc.yml --ext .js src tests",
-        "precommit": "lint-staged",
-        "test": "NODE_ENV=testing nyc node tests/index.js",
-        "doc": "node node_modules/@amjs/create-readme --d docs"
+        "build": "tsc",
+        "build:doc": "typedoc --tsconfig tsconfig.json --options typedoc.config.js",
+        "format": "prettier --config .prettierrc .",
+        "format:fix": "prettier --config .prettierrc --write .",
+        "lint": "eslint --config eslint.config.js src/**/*.ts ",
+        "lint:fix": "eslint --fix --config eslint.config.js src/**/*.ts",
+        "test": "jest --config jest.config.ts",
+        "test:coverage": "jest --config jest.config.ts --coverage",
+        "type:check": "tsc --noEmit"
     }
 }

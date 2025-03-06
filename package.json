@@ -1,5 +1,5 @@
 {
-    "name": "@amjs/utils",
+    "name": "@amjs/js-utils",
     "version": "0.2.0",
     "description": "Set of JS tools.",
     "keywords": [
@@ -9,7 +9,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "ulr": "git@github.com:Wolfchamane/amjs-utils.git"
+        "ulr": "git@github.com:Wolfchamane/amjs-js-utils.git"
     },
     "author": "Arturo Martínez Díaz <arturo.martinez@amartinez.dev>",
     "main": "dist/index.js",
@@ -24,6 +24,7 @@
         "prettier": "^3.5.0",
         "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",
+        "typedoc": "^0.27.9",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.26.0"
     },
@@ -34,10 +35,8 @@
         "format:fix": "prettier --config .prettierrc --write .",
         "lint": "eslint --config eslint.config.js src/**/*.ts ",
         "lint:fix": "eslint --fix --config eslint.config.js src/**/*.ts",
-        "test": "npx jest --config jest.config.ts",
-        "test:coverage": "npm run test -- --coverage"
-    },
-    "dependencies": {
-        "typedoc": "^0.27.9"
+        "test": "jest --config jest.config.ts",
+        "test:coverage": "jest --config jest.config.ts --coverage",
+        "type:check": "tsc --noEmit"
     }
 }

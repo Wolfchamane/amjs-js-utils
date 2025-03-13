@@ -1,0 +1,14 @@
+{
+    "name": "@amjs/js-utils-xhr-example",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@amjs/js-utils": "file:../",
+        "highlight.js": "^11.11.1",
+        "vite": "^6.2.1"
+    }
+}

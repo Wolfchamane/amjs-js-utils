@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="author" content="Arturo Martínez Díaz" />
+        <title>@amjs/js-utils XHR Demo</title>
+    </head>
+    <body>
+        <header class="fixed-header">
+            <h1>@amjs/js-utils XHR Demo</h1>
+            <p><i>Open dev console to see log traces</i></p>
+        </header>
+        <main>
+            <section>
+                <article>
+                    <div class="form-control">
+                        <label for="toggle-debug">Debug traces</label>
+                        <input id="toggle-debug" type="checkbox" checked />
+                    </div>
+                </article>
+            </section>
+
+            <section>
+                <header>
+                    <h2>Installation</h2>
+                </header>
+                <article>
+                    <pre>
+                        <code class='language-bash'>
+npm i --save-dev @amjs/js-utils
+                        </code>
+                    </pre>
+                </article>
+            </section>
+
+            <section>
+                <header>
+                    <h2>Create a new instance</h2>
+                </header>
+                <article>
+                    <pre>
+                        <code class='language-typescript'>
+import { JSONAdapter as Adapter, type XHR } from '@amjs/js-utils';
+const hostname: string = 'swapi.dev/api';
+const instance: XHR = new Adapter({ hostname });
+                        </code>
+                    </pre>
+                </article>
+            </section>
+
+            <section id="get-people-example">
+                <header>
+                    <h2>Use the instance to <code>fetch</code> the desired path</h2>
+                </header>
+                <div class="section-content">
+                    <article class="code-example">
+                        <pre>
+                            <code class='language-typescript'>
+import { type XHRFetchMethod, XHR_FETCH_METHODS } from '@amjs/js-utils';
+const secure: boolean = true;
+const path: string = '/people';
+const method: XHRFetchMethod = XHR_FETCH_METHODS.GET;
+let response;
+(async () => { response = await instance.fetch(path, { method, secure }); })();
+console.log(response); // { count: number, next: string, previous: null, results: [...] }
+                            </code>
+                        </pre>
+                        <div class="actions">
+                            <button id="get-people">Launch example</button>
+                            <button id="get-people-toggle-results" disabled>Toggle results</button>
+                        </div>
+                    </article>
+                    <article class="example-result hide">
+                        <pre>
+                            <code class='language-json'></code>
+                        </pre>
+                    </article>
+                </div>
+            </section>
+
+            <section id="query-params-example">
+                <header>
+                    <h2>Query Parameters</h2>
+                </header>
+                <article>
+                    <pre>
+                        <code class='language-typescript'>
+import { type XHRFetchMethod, XHR_FETCH_METHODS } from '@amjs/js-utils';
+const secure: boolean = true;
+const method: XHRFetchMethod = XHR_FETCH_METHODS.GET;
+
+// Given the following path:
+let path: string = '/people/{id}'; // optionally: '/people/:id'
+// You can define parameters to substitute in-path variables:
+let params: Record&lt;string, any&gt; = { id: '1' };
+// The URL eventually will be: '{hostname}/people/1'
+
+let response;
+(async () => { response = await instance.fetch(path, { method, secure, params }); })();
+console.log(response); // { name: string, ... }
+
+// But if you add extra parameters:
+path = '/people';
+params = { id: '1', search: 'vader' };
+// The URL will contain those extra params as query params:  '{hostname}/people?search=vader'
+
+let response;
+(async () => { response = await instance.fetch(path, { method, secure, params }); })();
+console.log(response); // { count: 1, ... }
+
+                        </code>
+                    </pre>
+                    <div class="actions">
+                        <button id="query-params">Launch example</button>
+                        <button id="query-params-toggle-results" disabled>Toggle results</button>
+                    </div>
+                </article>
+                <article class="example-result hide">
+                    <pre>
+                            <code class='language-json'></code>
+                        </pre>
+                </article>
+            </section>
+
+            <section id="custom-headers">
+                <header>
+                    <h2>Custom headers</h2>
+                    <p>See <a href='https://developer.mozilla.org/es/docs/Web/HTTP/Headers'>HTTP Headers</a> for more info.</p>
+                </header>
+                <article>
+                    <pre>
+                        <code class='language-typescript'>
+import { type XHRFetchMethod, XHR_FETCH_METHODS } from '@amjs/js-utils';
+const secure: boolean = true;
+const path: string = '/people';
+const method: XHRFetchMethod = XHR_FETCH_METHODS.GET;
+
+// Add you custom headers or any other available HTTP Header
+const headers: Record&lt;string, string&gt; = { 'X-USER-ID': '1234-1234-1234-1234-1234' };
+// @NOTICE: Exposed adapters will replace 'Accept' and 'Content-Type' to prefixed values.
+
+let response;
+(async () => { response = await instance.fetch(path, { method, secure, headers }); })();
+console.log(response); // { count: 1, ... }
+                        </code>
+                    </pre>
+                </article>
+            </section>
+        </main>
+        <script type="module" src="./src/main.ts"></script>
+    </body>
+</html>

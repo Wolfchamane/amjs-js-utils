@@ -3,8 +3,8 @@ import { DefaultXHR } from '../default-xhr';
 import { XHR_FETCH_METHODS, type XHRFetchMethod } from '../types';
 
 /**
- * Adaptor for any 'application/json' AJAX Http Request.
- * @see https://wolfchamane.github.io/amjs-js-utils/examples/xhr
+ * Adaptor for any `'application/json'` AJAX Http Request.
+ * @see https://github.com/Wolfchamane/amjs-js-utils/examples/xhr/main.ts
  */
 export class JSONAdapter extends DefaultXHR {
     /**

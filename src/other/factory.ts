@@ -31,10 +31,14 @@ export interface FactoryInstance {
  * ```
  */
 export class Factory implements FactoryInstance {
-    readonly registry: Record<string, <T>(value?: any) => T>;
+    private readonly registry: Record<string, <T>(value?: any) => T>;
 
     private $i: FactoryInstance | undefined;
 
+    /**
+     * Returns a singleton instance
+     * @return {FactoryInstance}    Singleton
+     */
     static i(): FactoryInstance {
         Factory.prototype.$i = Factory.prototype.$i || new Factory();
 
@@ -45,26 +49,49 @@ export class Factory implements FactoryInstance {
         this.registry = {};
     }
 
+    /**
+     * Returns whether class constructor is being registered at the factory singleton.
+     * @param   {string}    name    Class constructor identifier within factory registry
+     * @return  {boolean}   `true` if exists, `false` in other case
+     */
     has(name: string): boolean {
         return this.registry && name in this.registry;
     }
 
+    /**
+     * Registers a class constructor identified by the {name} parameter
+     * @param   {string}    name        Class constructor unique identifier
+     * @param   {Function}  Constructor To be registered
+     */
     register(name: string, Constructor: <T>(value?: any) => T): void {
         if (!this.has(name)) {
             this.registry[name] = Constructor;
         }
     }
 
+    /**
+     * Removes an existing class constructor
+     * @param   {string}    name    Identifier to be removed
+     */
     remove(name: string): void {
         if (this.has(name)) {
             delete this.registry[name];
         }
     }
 
+    /**
+     * List all registered class constructors
+     */
     list(): string[] {
         return Object.keys(this.registry);
     }
 
+    /**
+     * Creates a singleton of a registered class constructor
+     * @param   {string}        name    Identifier of the class constructor within the registry
+     * @param   {undefined|*}   value   To pass as argument for the class constructor
+     * @return  {undefined|*}   Singleton of the class, or `undefined` in other case
+     */
     create<T>(name: string, value?: any): T | any {
         const Constructor: boolean | (<T>(value?: any) => T) = this.has(name) && this.registry[name];
         if (Constructor instanceof Function) {

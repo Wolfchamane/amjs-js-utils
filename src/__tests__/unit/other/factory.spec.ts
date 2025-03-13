@@ -44,5 +44,11 @@ describe('Factory', () => {
         const sut = await fi.create('other-class');
         expect(sut).toBeUndefined();
     });
+
+    test('Allows to remove a registered class', () => {
+        expect(fi.has(registryName)).toBeTruthy();
+        fi.remove(registryName);
+        expect(fi.has(registryName)).toBeFalsy();
+    });
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

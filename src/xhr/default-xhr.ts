@@ -86,6 +86,17 @@ export class DefaultXHR implements XHR {
     }
 
     /**
+     * Resets instance to its default status
+     * @private
+     */
+    private _reset(): void {
+        this.controller = undefined;
+        this.request = undefined;
+        this.response = undefined;
+        this.url = undefined;
+    }
+
+    /**
      * Returns whether log level meets class debug level or not
      * @param   {string}    level   Specific log level for a single message
      * @private
@@ -135,11 +146,12 @@ export class DefaultXHR implements XHR {
     /**
      * Serializes a request.
      * @notice Must be override by adapter classes
-     * @param {undefined|Record<string, string>}    headers Set of request headers
-     * @param {undefined|any}                       body    To be sent as part of the request
+     * @param   {undefined|Record<string, string>}    headers Set of request headers
+     * @param   {undefined|any}                       body    To be sent as part of the request
+     * @return  {Promise<void|Error>}                 An `Error` if request cannot be serialized.
      * @protected
      */
-    protected _serialize(headers?: Record<string, string>, body?: any): Promise<void> {
+    protected _serialize(headers?: Record<string, string>, body?: any): Promise<void | Error> {
         this._log(this.LOG_WARNING, true, '_serialize method must be override!');
 
         return Promise.resolve();
@@ -149,8 +161,9 @@ export class DefaultXHR implements XHR {
      * des-Serializes a request.
      * @notice Must be override by adapter classes
      * @protected
+     * @return  {Promise<any|Error>}    Returns the expected type associated with the fetch or an Error
      */
-    protected _unSerialize(): Promise<any> {
+    protected _unSerialize<T>(): Promise<T | any | Error> {
         this._log(this.LOG_WARNING, true, '_unSerialize method must be override!');
 
         return Promise.resolve();
@@ -175,7 +188,7 @@ export class DefaultXHR implements XHR {
         this._log(this.LOG_INFO, false, 'Building base URL');
         const protocol: string = secure ? 'https' : 'http';
         this._log(this.LOG_DETAIL, false, `Using ${protocol} protocol`);
-        let url: string = [protocol, this.hostname, this.port ? `:${this.port}` : ''].filter(Boolean).join('://');
+        let url: string = [protocol, [this.hostname, this.port].filter(Boolean).join(':')].join('://');
 
         if (path.startsWith('/')) {
             url += path;
@@ -200,7 +213,7 @@ export class DefaultXHR implements XHR {
      */
     private _replacePathQueryParams(url: string, params: Record<string, any>): string {
         this._log(this.LOG_INFO, false, 'Replacing path query params');
-        const paramInPathPattern: RegExp = /(([:{])\w+}?)/g;
+        const paramInPathPattern: RegExp = /(([:{])[a-zA-Z-]+}?)/g;
         if (paramInPathPattern.test(url)) {
             url = url.replace(paramInPathPattern, (match: string) => {
                 const key: string = match.replace(/\W/g, '');
@@ -276,11 +289,12 @@ export class DefaultXHR implements XHR {
      * @param   {string}          path    To be fetched
      * @param   {XHRFetchOptions} options Configures a single AJAX request
      */
-    async fetch<T>(path: string, options?: XHRFetchOptions): Promise<T | any> {
-        let result: T | any;
+    async fetch<T>(path: string, options?: XHRFetchOptions): Promise<T | Error> {
+        let result: T | Error;
         try {
             const { secure, params, method, headers, body } = options || {};
             this._log(this.LOG_GROUP, false, `Request to "${path}"`);
+            this._reset();
             this._buildController();
             this._buildRequestURL(path, params, secure);
             this._buildRequest(method || XHR_FETCH_METHODS.GET);
@@ -292,11 +306,12 @@ export class DefaultXHR implements XHR {
                 this._log(this.LOG_TIME_END, false, 'Duration');
                 this._log(this.LOG_DETAIL, false, 'Request end!');
             }
-            result = await this._unSerialize();
+            result = await this._unSerialize<T>();
         } catch (e: unknown) {
             this._log(this.LOG_ERROR, false, (e as Error).message);
-            result = e;
+            result = e as Error;
         } finally {
+            // @ts-expect-error use result
             this._log(this.LOG_DETAIL, false, `Result: %o`, result);
             this._log(this.LOG_GROUP_END);
         }

@@ -9,12 +9,8 @@ import { XHR_FETCH_METHODS, type XHRFetchMethod } from '../types';
 export class JSONAdapter extends DefaultXHR {
     /**
      * @override
-     * @param   {undefined|Record<string, string>}  headers Set of headers for the request.
-     * @param   {undefined|any}                     body    To sent as part of 'PUT', 'POST' or 'PATCH' requests.
-     * @protected
-     * @return  {Promise<void>}                     `resolved` after override Request, `reject<Error>` in other case
      */
-    protected _serialize(headers?: Record<string, string>, body?: any): Promise<void> {
+    protected _serialize(headers?: Record<string, string>, body?: any): Promise<void | Error> {
         return new Promise((resolve, reject) => {
             this._log(this.LOG_INFO, false, `Serializing request for JSON`);
             if (this.request && this.url) {
@@ -28,16 +24,19 @@ export class JSONAdapter extends DefaultXHR {
                 });
 
                 if (
-                    body &&
                     [XHR_FETCH_METHODS.PATCH, XHR_FETCH_METHODS.PUT, XHR_FETCH_METHODS.POST].includes(
                         this.request?.method as XHRFetchMethod
                     )
                 ) {
-                    this.request = new Request(this.url, {
-                        method: this.request?.method,
-                        headers: this.request?.headers,
-                        body: JSON.stringify(body)
-                    });
+                    if (body) {
+                        this.request = new Request(this.url, {
+                            method: this.request?.method,
+                            headers: this.request?.headers,
+                            body: JSON.stringify(body)
+                        });
+                    } else {
+                        reject(new Error('Cannot serialize empty body request'));
+                    }
                 }
 
                 this._log(this.LOG_DETAIL, false, `Override request to: %o`, this.request);
@@ -51,13 +50,11 @@ export class JSONAdapter extends DefaultXHR {
     /**
      * @override
      * @protected
-     * @return      {Promise<string>}   Resolve object from response
-     * @throws      {Error}             If cannot resolve object from response
      */
-    protected async _unSerialize(): Promise<object> {
+    protected async _unSerialize<T>(): Promise<T | Error> {
         this._log(this.LOG_INFO, false, `unSerializing request for JSON`);
         if (this.response && this.response.ok) {
-            return await this.response.json();
+            return (await this.response.json()) as T;
         } else {
             throw new Error('Cannot unSerialize empty or failed response');
         }

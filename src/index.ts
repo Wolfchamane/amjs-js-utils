@@ -1,2 +1,3 @@
-export * from './object/index';
-export * from './string/index';
+export * from './object';
+export * from './string';
+export * from './xhr';

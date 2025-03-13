@@ -1,52 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { JSONAdapter, XHR_DEBUG_LEVELS, type XHR, XHRFetchMethod, XHR_FETCH_METHODS } from '@/xhr';
-import { describe, test, expect, beforeEach } from '@jest/globals';
+import fetchMock from 'jest-fetch-mock';
+import { JSONAdapter, type XHR, XHR_FETCH_METHODS } from '@/xhr';
+import { describe, test, expect, beforeEach, beforeAll, afterAll } from '@jest/globals';
+
+beforeAll(() => fetchMock.enableMocks());
+afterAll(() => fetchMock.disableMocks());
 
 describe('JSONAdapter', () => {
-    const secure: boolean = true;
-    const hostname: string = 'swapi.dev/api';
+    const hostname: string = 'example';
+    const port: string = '3000';
+    const responseOk = { status: 'ok' };
+
     let sut: XHR;
-    let response: any | Error | undefined;
-
     beforeEach(() => {
-        response = undefined;
+        fetchMock.resetMocks();
+        sut = new JSONAdapter({ hostname, port });
+    });
 
-        sut = new JSONAdapter({
-            hostname,
-            debug: XHR_DEBUG_LEVELS.DETAILS
+    test('"application/json" headers are set into request', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify(responseOk));
+        await sut.fetch('/path');
+        expect(sut.request).not.toBeUndefined();
+        expect(sut.request?.headers.get('Accept')).toEqual('application/json');
+        expect(sut.request?.headers.get('Content-Type')).toEqual('application/json');
+    });
+
+    test('An error is returned if POST/PUT/PATCH request do not have a body', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify(responseOk));
+        const response = await sut.fetch('/path', {
+            method: XHR_FETCH_METHODS.POST
         });
-    });
-
-    test('Completes a GET request', async () => {
-        interface ExpectedResult {
-            count: number;
-            next: string;
-            previous: string | null;
-            results: Record<string, any>[];
-        }
-
-        const path: string = '/people';
-        const method: XHRFetchMethod = XHR_FETCH_METHODS.GET;
-        response = await sut.fetch<ExpectedResult>(path, { method, secure });
-        expect(response).not.toBeUndefined();
-        expect(response).not.toBeNull();
-        expect(response).not.toBeInstanceOf(Error);
-        expect(response).toBeInstanceOf(Object);
-        expect(response.count).not.toBe(0);
-        expect(response.next).not.toBe('');
-        expect(response.previous).toBeNull();
-        expect(Array.isArray(response?.results)).toBeTruthy();
-    });
-
-    test('Fills a path param', async () => {
-        const path: string = '/people/:id';
-        const method: XHRFetchMethod = XHR_FETCH_METHODS.GET;
-        const params: Record<string, any> = { id: 1 };
-        response = await sut.fetch<Record<string, any>>(path, { method, params, secure });
-        expect(response).not.toBeUndefined();
-        expect(response).not.toBeNull();
-        expect(response).not.toBeInstanceOf(Error);
-        expect(response).toBeInstanceOf(Object);
+        expect(response).toBeInstanceOf(Error);
     });
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

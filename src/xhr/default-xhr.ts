@@ -5,7 +5,8 @@ import {
     type XHRConfiguration,
     type XHRDebugLevel,
     type XHRFetchMethod,
-    XHR_DEBUG_LEVELS
+    XHR_DEBUG_LEVELS,
+    XHR_FETCH_METHODS
 } from './types';
 
 /**
@@ -64,9 +65,8 @@ export class DefaultXHR implements XHR {
      * Obtained from request
      * @property    response
      * @type        {Response|undefined}
-     * @private
      */
-    protected response: Response | undefined;
+    response: Response | undefined;
 
     /**
      * Fetched
@@ -276,14 +276,14 @@ export class DefaultXHR implements XHR {
      * @param   {string}          path    To be fetched
      * @param   {XHRFetchOptions} options Configures a single AJAX request
      */
-    async fetch<T>(path: string, options: XHRFetchOptions): Promise<T | any> {
+    async fetch<T>(path: string, options?: XHRFetchOptions): Promise<T | any> {
         let result: T | any;
         try {
-            const { secure, params, method, headers, body } = options;
+            const { secure, params, method, headers, body } = options || {};
             this._log(this.LOG_GROUP, false, `Request to "${path}"`);
             this._buildController();
             this._buildRequestURL(path, params, secure);
-            this._buildRequest(method);
+            this._buildRequest(method || XHR_FETCH_METHODS.GET);
             await this._serialize(headers, body);
             if (this.request) {
                 this._log(this.LOG_DETAIL, false, 'Request start!');

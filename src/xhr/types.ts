@@ -22,7 +22,7 @@ export const XHR_FETCH_METHODS = {
 };
 
 export interface XHRFetchOptions {
-    method: XHRFetchMethod;
+    method?: XHRFetchMethod;
     secure?: boolean;
     headers?: Record<string, string>;
     params?: Record<string, any>;
@@ -30,7 +30,10 @@ export interface XHRFetchOptions {
 }
 
 export interface XHR {
-    fetch<T>(path: string, options: XHRFetchOptions): Promise<T | any>;
+    request: Request | undefined;
+    response: Response | undefined;
+    url: URL | undefined;
+    fetch<T>(path: string, options?: XHRFetchOptions): Promise<T | any>;
     abort(reason?: string): void;
 }
 

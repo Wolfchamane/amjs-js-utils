@@ -30,11 +30,10 @@ export interface XHRFetchOptions {
 }
 
 export interface XHR {
-    request: Request | undefined;
-    response: Response | undefined;
-    url: URL | undefined;
+    buildRequest(path: string, options: XHRFetchOptions): void;
     fetch<T>(path: string, options?: XHRFetchOptions): Promise<T | any>;
     abort(reason?: string): void;
+    reset(): void;
 }
 
 export interface XHRConfiguration {

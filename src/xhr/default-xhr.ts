@@ -50,30 +50,33 @@ export class DefaultXHR implements XHR {
      * To control request
      * @property    controller
      * @type        {AbortController|undefined}
-     * @private
+     * @protected
      */
-    private controller: AbortController | undefined;
+    protected controller: AbortController | undefined;
 
     /**
      * To be performed
      * @property    request
      * @type        {Request|undefined}
+     * @protected
      */
-    request: Request | undefined;
+    protected request: Request | undefined;
 
     /**
      * Obtained from request
      * @property    response
      * @type        {Response|undefined}
+     * @protected
      */
-    response: Response | undefined;
+    protected response: Response | undefined;
 
     /**
      * Fetched
      * @property    url
      * @type        {URL|undefined}
+     * @protected
      */
-    url: URL | undefined;
+    protected url: URL | undefined;
 
     /**
      * @param {XHRConfiguration} config  Class configuration
@@ -83,17 +86,6 @@ export class DefaultXHR implements XHR {
         this.hostname = hostname;
         this.port = port;
         this.debug = debug || XHR_DEBUG_LEVELS.QUIET;
-    }
-
-    /**
-     * Resets instance to its default status
-     * @private
-     */
-    private _reset(): void {
-        this.controller = undefined;
-        this.request = undefined;
-        this.response = undefined;
-        this.url = undefined;
     }
 
     /**
@@ -270,14 +262,16 @@ export class DefaultXHR implements XHR {
 
     /**
      * Builds the {Request} object to be used
-     * @param   {XHRFetchMethod}    method  To perform
-     * @private
+     * @param   {string}            path    To be fetched
+     * @param   {XHRFetchOptions}   To built the request
      */
-    private _buildRequest(method: XHRFetchMethod): void {
+    buildRequest(path: string, { secure, params, method }: XHRFetchOptions): void {
         this._log(this.LOG_INFO, false, 'Building request info object');
+        this._buildController();
+        this._buildRequestURL(path, params, secure);
         if (this.url) {
             this.request = new Request(this.url, {
-                method,
+                method: method || XHR_FETCH_METHODS.GET,
                 signal: this.controller?.signal
             });
         }
@@ -294,10 +288,9 @@ export class DefaultXHR implements XHR {
         try {
             const { secure, params, method, headers, body } = options || {};
             this._log(this.LOG_GROUP, false, `Request to "${path}"`);
-            this._reset();
-            this._buildController();
-            this._buildRequestURL(path, params, secure);
-            this._buildRequest(method || XHR_FETCH_METHODS.GET);
+            if (!this.request) {
+                this.buildRequest(path, { secure, params, method });
+            }
             await this._serialize(headers, body);
             if (this.request) {
                 this._log(this.LOG_DETAIL, false, 'Request start!');
@@ -328,6 +321,16 @@ export class DefaultXHR implements XHR {
             this._log(this.LOG_INFO, false, `Aborting request to ${this.url?.href}`);
             this.controller.abort(reason);
         }
+    }
+
+    /**
+     * Resets instance to its default status
+     */
+    reset(): void {
+        this.controller = undefined;
+        this.request = undefined;
+        this.response = undefined;
+        this.url = undefined;
     }
 }
 /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */

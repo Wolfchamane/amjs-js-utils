@@ -23,7 +23,6 @@ export const XHR_FETCH_METHODS = {
 
 export interface XHRFetchOptions {
     method?: XHRFetchMethod;
-    secure?: boolean;
     headers?: Record<string, string>;
     params?: Record<string, any>;
     body?: any;
@@ -40,5 +39,6 @@ export interface XHRConfiguration {
     hostname: string;
     port?: string;
     debug?: XHRDebugLevel;
+    secure?: boolean;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */

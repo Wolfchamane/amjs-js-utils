@@ -93,8 +93,8 @@ const hostname: string = 'localhost';
  * I will suggest to enable secure request for any environment different to development or local.
  */
 (async () => {
-    const instance: XHR = new Adapter({ hostname });
-    await instance.fetch('/path', { secure: true });
+    const instance: XHR = new Adapter({ hostname, secure: true });
+    await instance.fetch('/path');
     console.log('[%s] %s', instance.request?.method, instance.url); // [GET] https://localhost/path
 })();
 
@@ -111,12 +111,12 @@ const hostname: string = 'localhost';
  */
 (async () => {
     class MyAdapter extends Adapter {
-        protected _serialize(headers?: Record<string, string>, body?: any): Promise<void> {
+        protected _serialize(headers?: Record<string, string>, body?: any): Promise<any> {
             // Do here whatever your adapter needs to do BEFORE performing the request
             return super._serialize(headers, body);
         }
 
-        protected async _unSerialize(): Promise<object> {
+        protected async _unSerialize(): Promise<any> {
             // Do here whatever your adapter needs to do AFTER performing the request
             return super._unSerialize();
         }

@@ -31,6 +31,14 @@ export class DefaultXHR implements XHR {
     protected debug: XHRDebugLevel;
 
     /**
+     * Flags if request to bound hostname should be secure (https) or not.
+     * @property    secure
+     * @type        boolean
+     * @protected
+     */
+    protected secure: boolean;
+
+    /**
      * To be requested
      * @property    hostname
      * @type        string
@@ -82,10 +90,11 @@ export class DefaultXHR implements XHR {
      * @param {XHRConfiguration} config  Class configuration
      */
     constructor(config: XHRConfiguration) {
-        const { hostname, port, debug } = config;
+        const { hostname, port, debug, secure } = config;
         this.hostname = hostname;
         this.port = port;
         this.debug = debug || XHR_DEBUG_LEVELS.QUIET;
+        this.secure = secure || false;
     }
 
     /**
@@ -172,13 +181,12 @@ export class DefaultXHR implements XHR {
     /**
      * Builds base URL to be fetched
      * @param   {string}            path    To be fetched
-     * @param   {undefined|boolean} secure  Whether to use secure or not protocol
      * @return  {string}            Based URL formed with {protocol}://{hostname}{:port?}
      * @private
      */
-    private _buildBaseURL(path: string, secure?: boolean): string {
+    private _buildBaseURL(path: string): string {
         this._log(this.LOG_INFO, false, 'Building base URL');
-        const protocol: string = secure ? 'https' : 'http';
+        const protocol: string = this.secure ? 'https' : 'http';
         this._log(this.LOG_DETAIL, false, `Using ${protocol} protocol`);
         let url: string = [protocol, [this.hostname, this.port].filter(Boolean).join(':')].join('://');
 
@@ -243,12 +251,11 @@ export class DefaultXHR implements XHR {
      * Builds request URL to be fetched
      * @param   {string}                        path    To be fetched
      * @param   {undefined|Record<string, any>} params  To replace or add to end URL
-     * @param   {undefined|boolean}             secure  Whether request is secure or not
      * @private
      */
-    private _buildRequestURL(path: string, params?: Record<string, any>, secure?: boolean): void {
+    private _buildRequestURL(path: string, params?: Record<string, any>): void {
         this._log(this.LOG_INFO, false, 'Building request URL');
-        let url = this._buildBaseURL(path, secure);
+        let url = this._buildBaseURL(path);
 
         if (params) {
             const paramsCopy = Object.assign({}, params);
@@ -265,10 +272,10 @@ export class DefaultXHR implements XHR {
      * @param   {string}            path    To be fetched
      * @param   {XHRFetchOptions}   To built the request
      */
-    buildRequest(path: string, { secure, params, method }: XHRFetchOptions): void {
+    buildRequest(path: string, { params, method }: XHRFetchOptions): void {
         this._log(this.LOG_INFO, false, 'Building request info object');
         this._buildController();
-        this._buildRequestURL(path, params, secure);
+        this._buildRequestURL(path, params);
         if (this.url) {
             this.request = new Request(this.url, {
                 method: method || XHR_FETCH_METHODS.GET,
@@ -286,10 +293,10 @@ export class DefaultXHR implements XHR {
     async fetch<T>(path: string, options?: XHRFetchOptions): Promise<T | Error> {
         let result: T | Error;
         try {
-            const { secure, params, method, headers, body } = options || {};
+            const { params, method, headers, body } = options || {};
             this._log(this.LOG_GROUP, false, `Request to "${path}"`);
             if (!this.request) {
-                this.buildRequest(path, { secure, params, method });
+                this.buildRequest(path, { params, method });
             }
             await this._serialize(headers, body);
             if (this.request) {

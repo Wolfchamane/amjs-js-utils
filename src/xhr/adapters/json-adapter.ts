@@ -4,7 +4,7 @@ import { XHR_FETCH_METHODS, type XHRFetchMethod } from '../types';
 
 /**
  * Adaptor for any `'application/json'` AJAX Http Request.
- * @see https://github.com/Wolfchamane/amjs-js-utils/examples/xhr/main.ts
+ * @see https://github.com/Wolfchamane/amjs-js-utils/blob/master/examples/xhr/main.ts
  */
 export class JSONAdapter extends DefaultXHR {
     /**

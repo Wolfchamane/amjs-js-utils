@@ -10,7 +10,9 @@
         "development"
     ],
     "license": "MIT",
-    "bugs": "https://github.com/Wolfchamane/amjs-js-utils/issues",
+    "bugs": {
+        "url": "https://github.com/Wolfchamane/amjs-js-utils/issues"
+    },
     "homepage": "https://github.com/Wolfchamane/amjs-js-utils",
     "repository": {
         "type": "git",

@@ -1,12 +1,17 @@
 {
     "name": "@amjs/js-utils",
     "version": "0.5.2",
-    "description": "Set of JS tools.",
+    "description": "Collection of ES6+ (JS) ESM tools",
     "keywords": [
         "javascript",
-        "tools"
+        "esm",
+        "tools",
+        "web",
+        "development"
     ],
     "license": "MIT",
+    "bugs": "https://github.com/Wolfchamane/amjs-js-utils/issues",
+    "homepage": "https://github.com/Wolfchamane/amjs-js-utils",
     "repository": {
         "type": "git",
         "ulr": "git@github.com:Wolfchamane/amjs-js-utils.git"

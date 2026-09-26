@@ -255,7 +255,7 @@ export class DefaultXHR implements XHR {
         let url: string | URL = this._buildBaseURL(path);
 
         if (params) {
-            const paramsCopy = JSON.parse(JSON.stringify(params ?? {}));
+            const paramsCopy = JSON.parse(JSON.stringify(params));
             url = this._replacePathQueryParams(url, paramsCopy);
             url = this._addQueryParams(url, paramsCopy);
         }
@@ -271,7 +271,7 @@ export class DefaultXHR implements XHR {
      * @param   {string}            path    To be fetched
      * @param   {XHRFetchOptions}   To built the request
      */
-    buildRequest(path: string, { params, method }: XHRFetchOptions): void {
+    private _buildRequest(path: string, { params, method }: XHRFetchOptions): void {
         this._log(this.LOG_INFO, false, 'Building request info object');
         const controller: AbortController = this._buildController();
         const url: URL = this._buildRequestURL(path, params);
@@ -302,20 +302,16 @@ export class DefaultXHR implements XHR {
         try {
             const { params, method, headers, body } = options || {};
             this._log(this.LOG_GROUP, false, `Request to "${path}"`);
-            this.buildRequest(path, { params, method });
+            this._buildRequest(path, { params, method });
             await this._serialize(path, headers, body);
             this._log(this.LOG_DETAIL, false, 'Request start!');
             this._log(this.LOG_TIME, false, 'Duration');
             const config: PathRequestConfig | undefined = this.getPathRequest(path);
-            if (config) {
-                const response = await fetch(config.request as Request);
-                this._setPathRequest(path, { ...config, response });
-                this._log(this.LOG_TIME_END, false, 'Duration');
-                this._log(this.LOG_DETAIL, false, 'Request end!');
-                result = await this._unSerialize<TResponse>(path);
-            } else {
-                throw MISSING_REQUEST_CONFIG_ERROR;
-            }
+            const response = await fetch(config.request as Request);
+            this._setPathRequest(path, { ...config, response });
+            this._log(this.LOG_TIME_END, false, 'Duration');
+            this._log(this.LOG_DETAIL, false, 'Request end!');
+            result = await this._unSerialize<TResponse>(path);
         } catch (e: unknown) {
             this._log(this.LOG_ERROR, false, (e as Error).message);
             result = e as Error;

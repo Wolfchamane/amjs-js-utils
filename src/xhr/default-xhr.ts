@@ -7,7 +7,6 @@ import {
     XHR_DEBUG_LEVELS,
     XHR_FETCH_METHODS
 } from './types';
-import { MISSING_REQUEST_CONFIG_ERROR } from './constants';
 import type { TRecord } from '../types';
 
 /**
@@ -307,8 +306,8 @@ export class DefaultXHR implements XHR {
             this._log(this.LOG_DETAIL, false, 'Request start!');
             this._log(this.LOG_TIME, false, 'Duration');
             const config: PathRequestConfig | undefined = this.getPathRequest(path);
-            const response = await fetch(config.request as Request);
-            this._setPathRequest(path, { ...config, response });
+            const response = await fetch(config!.request as Request);
+            this._setPathRequest(path, { ...(config || {}), response });
             this._log(this.LOG_TIME_END, false, 'Duration');
             this._log(this.LOG_DETAIL, false, 'Request end!');
             result = await this._unSerialize<TResponse>(path);

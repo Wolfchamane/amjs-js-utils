@@ -64,6 +64,7 @@ describe('DefaultXHR', () => {
     });
 
     test('Any request can be aborted', () => {
+        /* eslint  @typescript-eslint/no-explicit-any: [0] */
         const abortMock = vi.fn();
         class MockController {
             abort(args: any) {

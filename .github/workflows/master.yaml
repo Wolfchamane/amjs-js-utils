@@ -69,7 +69,7 @@ jobs:
             - name: Build project
               run: npm run build
             - name: Publish to registry
-              run: npm publish --access public
+              run: npm stage publish --provenance --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     deploy_pages:
